@@ -2,13 +2,6 @@ import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-interface Message {
-  id: number;
-  sender: string;
-  content: string;
-  timestamp: string;
-}
-
 interface Request {
   id: number;
   sender: string;
@@ -58,11 +51,11 @@ const Requests: React.FC = () => {
       request.department.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const handleStateChange = (requestId: number, newState: Request['state']) => {
-    setRequests(requests.map(request =>
-      request.id === requestId ? { ...request, state: newState } : request
-    ));
-  };
+  // const handleStateChange = (requestId: number, newState: Request['state']) => {
+    // setRequests(requests.map(request =>
+    //   request.id === requestId ? { ...request, state: newState } : request
+    // ));
+  // };
 
   const getStateColor = (state: Request['state']) => {
     switch (state) {
@@ -160,7 +153,7 @@ const Requests: React.FC = () => {
                         value={request.state}
                         onChange={(e) => {
                           e.stopPropagation();
-                          handleStateChange(request.id, e.target.value as Request['state']);
+                          // handleStateChange(request.id, e.target.value as Request['state']);
                         }}
                         className="text-sm border rounded-lg px-3 py-2"
                         onClick={(e) => e.stopPropagation()}

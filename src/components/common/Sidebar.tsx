@@ -1,4 +1,4 @@
-import { ChevronRight, ChevronLeft, Home, Users, MessageCircle, Settings, Building } from "lucide-react";
+import { ChevronRight, ChevronLeft, Users, MessageCircle, Settings, Building } from "lucide-react";
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 

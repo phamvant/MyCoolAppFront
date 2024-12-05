@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send } from 'lucide-react';
 
 interface Message {
@@ -23,7 +23,7 @@ interface Request {
 }
 
 const RequestChat: React.FC = () => {
-    const { id } = useParams();
+    // const { id } = useParams();
     const navigate = useNavigate();
     const [newMessage, setNewMessage] = useState('');
 
