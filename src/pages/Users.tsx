@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  Edit,
-  Trash2,
-  Filter,
-  Plus,
-  Search,
-  AlertCircle
-} from 'lucide-react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Edit, Trash2, Filter, Plus, Search, AlertCircle } from "lucide-react";
 
 interface User {
   id: number;
   name: string;
   email: string;
   role: string;
-  status: 'Active' | 'Inactive';
+  status: "Active" | "Inactive";
 }
 
 interface DeleteDialogProps {
@@ -24,7 +17,12 @@ interface DeleteDialogProps {
   onConfirm: () => void;
 }
 
-const DeleteDialog: React.FC<DeleteDialogProps> = ({ isOpen, user, onClose, onConfirm }) => {
+const DeleteDialog: React.FC<DeleteDialogProps> = ({
+  isOpen,
+  user,
+  onClose,
+  onConfirm,
+}) => {
   if (!isOpen || !user) return null;
 
   return (
@@ -36,7 +34,8 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ isOpen, user, onClose, onCo
         </div>
 
         <p className="text-gray-600 mb-4">
-          Are you sure you want to delete user "{user.name}"? This action cannot be undone.
+          Are you sure you want to delete user "{user.name}"? This action cannot
+          be undone.
         </p>
 
         <div className="flex justify-end space-x-3">
@@ -60,34 +59,37 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ isOpen, user, onClose, onCo
 
 const Users: React.FC = () => {
   const navigate = useNavigate();
-  const [filter, setFilter] = useState('');
-  const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; user: User | null }>({
+  const [filter, setFilter] = useState("");
+  const [deleteDialog, setDeleteDialog] = useState<{
+    isOpen: boolean;
+    user: User | null;
+  }>({
     isOpen: false,
-    user: null
+    user: null,
   });
 
   const [users] = useState<User[]>([
     {
       id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'Admin',
-      status: 'Active'
+      name: "John Doe",
+      email: "john@example.com",
+      role: "Admin",
+      status: "Active",
     },
     {
       id: 2,
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      role: 'User',
-      status: 'Active'
+      name: "Jane Smith",
+      email: "jane@example.com",
+      role: "User",
+      status: "Active",
     },
     {
       id: 3,
-      name: 'Bob Johnson',
-      email: 'bob@example.com',
-      role: 'User',
-      status: 'Inactive'
-    }
+      name: "Bob Johnson",
+      email: "bob@example.com",
+      role: "User",
+      status: "Inactive",
+    },
   ]);
 
   const handleDeleteClick = (user: User) => {
@@ -97,7 +99,7 @@ const Users: React.FC = () => {
   const handleDeleteConfirm = () => {
     if (deleteDialog.user) {
       // Implement delete logic here
-      console.log('Deleting user:', deleteDialog.user.id);
+      console.log("Deleting user:", deleteDialog.user.id);
     }
     setDeleteDialog({ isOpen: false, user: null });
   };
@@ -107,7 +109,7 @@ const Users: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Users</h1>
         <button
-          onClick={() => navigate('/user/create')}
+          onClick={() => navigate("/user/create")}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-700 transition-colors duration-150"
         >
           <Plus className="w-5 h-5 mr-2" />
@@ -143,27 +145,31 @@ const Users: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
-              <tr key={user.id} className="border-b last:border-b-0 hover:bg-gray-50 cursor-pointer"
+            {users.map((user) => (
+              <tr
+                key={user.id}
+                className="border-b last:border-b-0 hover:bg-gray-50 cursor-pointer bg-card"
                 onClick={() => navigate(`/user/${user.id}`)}
               >
-                <td
-                  className="p-4"
-                >
-                  {user.name}
-                </td>
+                <td className="p-4">{user.name}</td>
                 <td className="p-4">{user.email}</td>
                 <td className="p-4">{user.role}</td>
                 <td className="p-4">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                    ${user.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    ${
+                      user.status === "Active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
+                  >
                     {user.status}
                   </span>
                 </td>
                 <td className="p-4">
                   <div className="flex justify-end space-x-2">
                     <button
-                       onClick={(e) => {
+                      onClick={(e) => {
                         e.stopPropagation();
                         navigate(`/user/${user.id}/edit`);
                       }}
@@ -174,7 +180,8 @@ const Users: React.FC = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteClick(user)}}
+                        handleDeleteClick(user);
+                      }}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150"
                     >
                       <Trash2 className="w-5 h-5" />

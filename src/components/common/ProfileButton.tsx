@@ -1,25 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import { User, Settings, LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/UseAuth";
 
-interface ProfileButtonProps {
-  initials: string;
-  name: string;
-  email: string;
-  userId: string | number;
-  onLogout?: () => void;
-}
-
-const ProfileButton: React.FC<ProfileButtonProps> = ({
-  initials,
-  name,
-  email,
-  userId,
-  onLogout,
-}) => {
+const ProfileButton: React.FC = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
+
+  const { authentication } = useAuth();
+
+  const onLogout = () => {
+    window.open(`http://localhost:8080/api/v1/auth/logout`, "_self");
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -35,48 +26,58 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleProfileClick = () => {
-    setShowProfileMenu(false);
-    navigate(`/user/${userId}`);
-  };
-
   return (
     <div className="relative" ref={profileRef}>
       <div
-        className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-200 transition-colors duration-200"
+        className="flex rounded-full items-center justify-center cursor-pointer transition-colors duration-200"
         onClick={() => setShowProfileMenu(!showProfileMenu)}
       >
-        <span className="text-blue-600">{initials}</span>
+        {!authentication ? (
+          <a
+            href="/login"
+            className="px-4 py-2 text-white bg-primary rounded-full hover:bg-primary/90"
+          >
+            Login
+          </a>
+        ) : (
+          <img
+            className="size-8 rounded-full"
+            src={authentication.picture}
+            alt="Profile"
+          />
+        )}
       </div>
 
       <div
         className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-10 transform origin-top-right transition-all duration-200 ease-out
                     ${
-                      showProfileMenu
+                      showProfileMenu && authentication
                         ? "opacity-100 scale-100 translate-y-0"
                         : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
                     }`}
       >
-        <div className="px-4 py-2 border-b">
-          <p className="text-sm font-medium">{name}</p>
-          <p className="text-xs text-gray-500">{email}</p>
-        </div>
+        {authentication && (
+          <div className="px-4 py-2 border-b">
+            <p className="text-sm font-medium">{authentication.username}</p>
+            <p className="text-xs text-gray-500">{authentication.email}</p>
+          </div>
+        )}
 
-        <button
-          onClick={handleProfileClick}
+        <a
+          href={`/user/${authentication ? authentication.id : ""}`}
           className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center transition-colors duration-150"
         >
           <User className="w-4 h-4 mr-2" />
           Profile
-        </button>
+        </a>
 
-        <button
-          onClick={() => navigate("/settings")}
+        <a
+          href="/settings"
           className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center transition-colors duration-150"
         >
           <Settings className="w-4 h-4 mr-2" />
           Settings
-        </button>
+        </a>
 
         <div className="border-t">
           <button

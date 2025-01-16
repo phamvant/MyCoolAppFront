@@ -54,12 +54,12 @@ const Login: React.FC = () => {
             onClick={handleGoogleLogin}
             className="flex items-center justify-center w-full py-2 text-white bg-red-600 rounded-full hover:bg-red-700 transition-colors duration-150"
           >
-            <KeyIcon className="mr-2" /> {/* Google icon */}
+            <KeyIcon className="mr-2" />
             Login with Google
           </button>
         </div>
         <p className="text-sm text-center text-gray-600">
-          Don't have an account?{" "}
+          Don't have an account?
           <a href="/register" className="text-blue-600 hover:underline">
             Register here
           </a>

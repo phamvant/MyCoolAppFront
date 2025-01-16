@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    @apply text-gray-800;
+    @apply dark:text-gray-200;
+}
+
+:root {
+  --background-color: 249, 250, 251;
+  --border-color: 229, 231, 235;
+  --card-color: 253, 253, 253;
+  --primary-color: 59, 130, 246;
+  --secondary-color: 255, 255, 255;
+  --accent-color: 255, 255, 255;
+  --success-color: 25, 115, 29;
+  --info-color: 20, 94, 117;
+  --warning-color: 187, 33, 36;
+  --danger-color: 185, 28, 28;
+  --text-muted-color: 82, 82, 82;
+}
+
+.dark {
+  --background-color: 25, 25, 25;
+  --border-color: 31, 31, 31;
+  --card-color: 83, 120, 208;
+  --primary-color: 59, 130, 246;
+  --secondary-color: 255, 255, 255;
+  --accent-color: 255, 255, 255;
+  --text-color: 255, 255, 255;
+  --text-secondary-color: 209, 213, 219;
+  --text-muted-color: 82, 82, 82;
+  --success-color: 25, 115, 29;
+  --info-color: 20, 94, 117;
+  --warning-color: 187, 33, 36;
+  --danger-color: 185, 28, 28;
+  color: #FFFFFF;
+}

@@ -16,6 +16,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true); // Add loading state
 
   const checkAuth = async () => {
+    if (authentication) {
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8080/api/v1/auth/status", {
         credentials: "include",

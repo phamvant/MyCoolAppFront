@@ -1,73 +1,72 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Mail, 
-  Phone, 
-  User, 
-  Building,
-  Briefcase, 
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Mail,
+  Phone,
+  User,
+  Briefcase,
   Save,
   X,
   Shield,
   MapPin,
   Info,
-  AlertCircle
-} from 'lucide-react';
-import AvatarUpload from '../components/common/AvatarUpload';
+  AlertCircle,
+} from "lucide-react";
+import AvatarUpload from "../components/common/AvatarUpload";
 
 interface UserForm {
   name: string;
   email: string;
   phone: string;
   role: string;
-  department: string;
   location: string;
   password: string;
-  status: 'Active' | 'Inactive';
+  status: "Active" | "Inactive";
   avatar: File | null;
 }
 
 const CreateUser: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [formData, setFormData] = useState<UserForm>({
-    name: '',
-    email: '',
-    phone: '',
-    role: '',
-    department: '',
-    location: '',
-    password: '',
-    status: 'Active',
-    avatar: null
+    name: "",
+    email: "",
+    phone: "",
+    role: "",
+    location: "",
+    password: "",
+    status: "Active",
+    avatar: null,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleAvatarChange = (file: File | null) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      avatar: file
+      avatar: file,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       // Add your API call here
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      navigate('/users');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      navigate("/users");
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error("Error creating user:", error);
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +78,7 @@ const CreateUser: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900">Create New User</h1>
         <div className="flex space-x-3">
           <button
-            onClick={() => navigate('/users')}
+            onClick={() => navigate("/users")}
             className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150 flex items-center"
           >
             <X className="w-4 h-4 mr-2" />
@@ -89,13 +88,15 @@ const CreateUser: React.FC = () => {
             onClick={handleSubmit}
             disabled={isLoading}
             className={`px-4 py-2 text-sm text-white rounded-lg flex items-center
-              ${isLoading 
-                ? 'bg-blue-400 cursor-not-allowed' 
-                : 'bg-blue-600 hover:bg-blue-700'} 
+              ${
+                isLoading
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              } 
               transition-colors duration-150`}
           >
             <Save className="w-4 h-4 mr-2" />
-            {isLoading ? 'Creating...' : 'Create User'}
+            {isLoading ? "Creating..." : "Create User"}
           </button>
         </div>
       </div>
@@ -105,7 +106,13 @@ const CreateUser: React.FC = () => {
         <div className="col-span-2 bg-white rounded-lg shadow-md">
           <div className="p-6 border-b">
             <AvatarUpload
-              initials={formData.name.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+              initials={
+                formData.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase() || "U"
+              }
               onImageChange={handleAvatarChange}
             />
           </div>
@@ -114,7 +121,9 @@ const CreateUser: React.FC = () => {
             <div className="space-y-6">
               {/* Basic Information */}
               <div>
-                <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
+                <h2 className="text-lg font-semibold mb-4">
+                  Basic Information
+                </h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -221,22 +230,15 @@ const CreateUser: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {/* <label className="block text-sm font-medium text-gray-700 mb-1">
                       Department
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Building className="h-4 w-4 text-gray-400" />
                       </div>
-                      <input
-                        type="text"
-                        name="department"
-                        value={formData.department}
-                        onChange={handleChange}
-                        className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Enter department"
-                      />
-                    </div>
+                      <input />
+                    </div> */}
                   </div>
 
                   <div>
@@ -292,11 +294,16 @@ const CreateUser: React.FC = () => {
               </div>
               <div className="flex items-start space-x-2">
                 <AlertCircle className="w-4 h-4 mt-0.5 text-blue-500 flex-shrink-0" />
-                <p>Password must be at least 8 characters long and include numbers and special characters.</p>
+                <p>
+                  Password must be at least 8 characters long and include
+                  numbers and special characters.
+                </p>
               </div>
               <div className="flex items-start space-x-2">
                 <AlertCircle className="w-4 h-4 mt-0.5 text-blue-500 flex-shrink-0" />
-                <p>User status can be changed later from the user profile page.</p>
+                <p>
+                  User status can be changed later from the user profile page.
+                </p>
               </div>
             </div>
           </div>

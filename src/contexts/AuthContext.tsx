@@ -4,7 +4,7 @@ import { AuthInfo } from "../providers/AuthProvider";
 interface AuthContextType {
   authentication: AuthInfo | false;
   checkAuth: () => Promise<void>;
-  loading: boolean; // Add loading to the context type
+  loading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(

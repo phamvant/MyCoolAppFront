@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  User, 
-  Building,
-  Briefcase, 
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  User,
+  Briefcase,
   Save,
   X,
   Calendar,
-  Activity
-} from 'lucide-react';
-import AvatarUpload from '../components/common/AvatarUpload';
+  Activity,
+} from "lucide-react";
+import AvatarUpload from "../components/common/AvatarUpload";
 
 interface UserProfile {
   name: string;
@@ -20,7 +19,6 @@ interface UserProfile {
   phone: string;
   role: string;
   location: string;
-  department: string;
   joinDate: string;
   avatar: File | null;
   avatarUrl?: string;
@@ -29,45 +27,44 @@ interface UserProfile {
 const ProfileEdit: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  
+
   const [profile, setProfile] = useState<UserProfile>({
     name: "John Doe",
     email: "john.doe@example.com",
     phone: "+1 (555) 123-4567",
     role: "Senior Developer",
     location: "New York, USA",
-    department: "Engineering",
     joinDate: "Jan 2022",
-    avatar: null
+    avatar: null,
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setProfile(prev => ({
+    setProfile((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleAvatarChange = (file: File | null) => {
-    setProfile(prev => ({
+    setProfile((prev) => ({
       ...prev,
-      avatar: file
+      avatar: file,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       // Add your API call here
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulated API call
       navigate(`/users/${id}`);
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
     } finally {
       setIsLoading(false);
     }
@@ -89,13 +86,15 @@ const ProfileEdit: React.FC = () => {
             onClick={handleSubmit}
             disabled={isLoading}
             className={`px-4 py-2 text-sm text-white rounded-lg flex items-center
-              ${isLoading 
-                ? 'bg-blue-400 cursor-not-allowed' 
-                : 'bg-blue-600 hover:bg-blue-700'} 
+              ${
+                isLoading
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              } 
               transition-colors duration-150`}
           >
             <Save className="w-4 h-4 mr-2" />
-            {isLoading ? 'Saving...' : 'Save Changes'}
+            {isLoading ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>
@@ -108,7 +107,11 @@ const ProfileEdit: React.FC = () => {
               <div className="flex items-center space-x-4">
                 <AvatarUpload
                   initialImage={profile.avatarUrl}
-                  initials={profile.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  initials={profile.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()}
                   onImageChange={handleAvatarChange}
                 />
               </div>
@@ -118,7 +121,9 @@ const ProfileEdit: React.FC = () => {
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <User className="h-4 w-4 text-gray-400" />
@@ -134,7 +139,9 @@ const ProfileEdit: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Mail className="h-4 w-4 text-gray-400" />
@@ -150,7 +157,9 @@ const ProfileEdit: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Phone className="h-4 w-4 text-gray-400" />
@@ -166,7 +175,9 @@ const ProfileEdit: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Role
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Briefcase className="h-4 w-4 text-gray-400" />
@@ -182,23 +193,9 @@ const ProfileEdit: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Building className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    name="department"
-                    value={profile.department}
-                    onChange={handleChange}
-                    className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Location
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <MapPin className="h-4 w-4 text-gray-400" />

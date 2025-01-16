@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Calendar, 
-  Briefcase, 
-  Edit2, 
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Briefcase,
+  Edit2,
   Clock,
-  Activity
-} from 'lucide-react';
+  Activity,
+} from "lucide-react";
 
 interface UserActivity {
   id: number;
@@ -21,7 +21,7 @@ interface UserActivity {
 const UserDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+
   // This would typically come from an API
   const [user] = useState({
     id,
@@ -30,10 +30,9 @@ const UserDetail: React.FC = () => {
     phone: "+1 (555) 123-4567",
     role: "Senior Developer",
     location: "New York, USA",
-    department: "Engineering",
     joinDate: "Jan 2022",
     status: "Active",
-    avatar: "JD"
+    avatar: "JD",
   });
 
   const [recentActivity] = useState<UserActivity[]>([
@@ -41,20 +40,20 @@ const UserDetail: React.FC = () => {
       id: 1,
       action: "Project Update",
       timestamp: "2 hours ago",
-      details: "Updated the documentation for Project X"
+      details: "Updated the documentation for Project X",
     },
     {
       id: 2,
       action: "Task Completed",
       timestamp: "1 day ago",
-      details: "Completed the implementation of new features"
+      details: "Completed the implementation of new features",
     },
     {
       id: 3,
       action: "Meeting",
       timestamp: "2 days ago",
-      details: "Attended the weekly team sync"
-    }
+      details: "Attended the weekly team sync",
+    },
   ]);
 
   return (
@@ -64,19 +63,27 @@ const UserDetail: React.FC = () => {
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-4">
             <div className="h-20 w-20 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-blue-600 text-2xl font-semibold">{user.avatar}</span>
+              <span className="text-blue-600 text-2xl font-semibold">
+                {user.avatar}
+              </span>
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
               <p className="text-gray-600">{user.role}</p>
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                ${user.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+              <span
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                ${
+                  user.status === "Active"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-gray-100 text-gray-800"
+                }`}
+              >
                 {user.status}
               </span>
             </div>
           </div>
-          <button 
-            onClick={() => navigate(`/user/${id}/edit`)} 
+          <button
+            onClick={() => navigate(`/user/${id}/edit`)}
             className="flex items-center px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-150"
           >
             <Edit2 className="w-4 h-4 mr-2" />
@@ -107,7 +114,6 @@ const UserDetail: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center space-x-2 text-gray-600">
                 <Briefcase className="w-4 h-4" />
-                <span>{user.department}</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-600">
                 <Calendar className="w-4 h-4" />
@@ -140,11 +146,16 @@ const UserDetail: React.FC = () => {
         <div className="col-span-3 bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Recent Activity</h2>
-            <button className="text-sm text-blue-600 hover:text-blue-700">View All</button>
+            <button className="text-sm text-blue-600 hover:text-blue-700">
+              View All
+            </button>
           </div>
           <div className="space-y-4">
-            {recentActivity.map(activity => (
-              <div key={activity.id} className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-150">
+            {recentActivity.map((activity) => (
+              <div
+                key={activity.id}
+                className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-150"
+              >
                 <div className="bg-blue-100 rounded-full p-2">
                   <Activity className="w-4 h-4 text-blue-600" />
                 </div>
@@ -156,7 +167,9 @@ const UserDetail: React.FC = () => {
                       {activity.timestamp}
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">{activity.details}</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {activity.details}
+                  </p>
                 </div>
               </div>
             ))}
