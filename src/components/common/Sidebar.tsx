@@ -34,7 +34,7 @@ const Sidebar: React.FC = () => {
   return (
     <aside className="rounded-xl bg-card lg:min-w-[350px] hidden md:block">
       <nav className="p-5 space-y-4">
-        <NavItem to="/exams" label="Exams">
+        <NavItem to="/MyCoolAppFront/exams" label="Exams">
           <Building className="w-6 h-5" />
         </NavItem>
         {/* <NavItem to="/requests" label="Requests">
@@ -45,7 +45,7 @@ const Sidebar: React.FC = () => {
             </span>
           </button>
         </NavItem> */}
-        <NavItem to="/settings" label="Settings">
+        <NavItem to="/MyCoolAppFront/settings" label="Settings">
           <Settings className="w-6 h-5" />
         </NavItem>
       </nav>

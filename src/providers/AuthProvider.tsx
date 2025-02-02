@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import configuration from "../configuration/EnvConfig";
 
 export interface AuthInfo {
   id: number;
@@ -21,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/auth/status", {
+      const response = await fetch(`${configuration.BACKEND_URL}/auth/status`, {
         credentials: "include",
       });
 

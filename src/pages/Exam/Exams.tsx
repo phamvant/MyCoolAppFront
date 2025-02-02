@@ -1,19 +1,90 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import ProgressBar from "../../components/common/ProgressBar";
-import { NavLink } from "react-router-dom";
+import configuration from "../../configuration/EnvConfig";
+import { useNavigate } from "react-router-dom";
 
 interface Exam {
   id: number;
   name: string;
-  description: string;
+  // description: string;
   progress: number;
   favorite: boolean;
-  url: string;
   image: string;
+  // public: boolean;
 }
 
 const Exams: React.FC = () => {
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [isError, setIsError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchExams = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `${configuration.BACKEND_URL}/exam-instances`,
+          {
+            credentials: "include",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch exams");
+        }
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format");
+        }
+
+        const validatedExams = data.map((exam) => {
+          if (!exam.id || typeof exam.id !== "number") {
+            throw new Error("Invalid exam ID");
+          }
+          if (!exam.name || typeof exam.name !== "string") {
+            throw new Error("Invalid exam name");
+          }
+          // if (!exam.description || typeof exam.description !== "string") {
+          //   throw new Error("Invalid exam description");
+          // }
+          if (!exam.progress) {
+            exam.progress = 0;
+          }
+          if (!exam.favorite) {
+            exam.favorite = false;
+          }
+          if (!exam.image) {
+            exam.image =
+              "https://static.vecteezy.com/system/resources/thumbnails/009/315/297/small/white-clipboard-task-management-todo-check-list-efficient-work-on-project-plan-fast-progress-level-up-concept-assignment-and-exam-productivity-solution-icon-3d-check-list-render-png.png";
+          }
+          return exam;
+        });
+
+        setExams(validatedExams);
+        setIsError(null);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching exams:", error);
+        setIsError("Failed to fetch exams");
+        setExams([]);
+        setIsLoading(false);
+      }
+    };
+
+    fetchExams();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    navigate("/error");
+  }
+
   return (
     <div className="p-6 overflow-auto">
       <div className="flex justify-between items-center mb-6">
@@ -25,22 +96,8 @@ const Exams: React.FC = () => {
       </div>
 
       <div className="flex flex-wrap gap-4 md:gap-10 lg:gap-16">
-        {Array.from({ length: 10 }).map((_val, idx) => {
-          return (
-            <ExamCard
-              key={idx}
-              exam={{
-                id: idx + 1,
-                name: `Exam-${idx + 1}`,
-                description: `Exam-${idx + 1} description`,
-                progress: 0.5,
-                favorite: false,
-                url: `/exams/${idx + 1}`,
-                image:
-                  "https://static.vecteezy.com/system/resources/thumbnails/009/315/297/small/white-clipboard-task-management-todo-check-list-efficient-work-on-project-plan-fast-progress-level-up-concept-assignment-and-exam-productivity-solution-icon-3d-check-list-render-png.png",
-              }}
-            />
-          );
+        {exams.map((exam) => {
+          return <ExamCard key={exam.id} exam={exam} />;
         })}
       </div>
     </div>
@@ -60,11 +117,11 @@ const ExamCard: React.FC<{ exam: Exam }> = ({ exam }) => {
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">{exam.name}</h3>
         </div>
-        <NavLink to={exam.url}>
+        <a href={`/MyCoolAppFront/exams/${exam.id}`}>
           <div className="bg-primary text-white px-4 py-2 rounded-full">
             Take Test
           </div>
-        </NavLink>
+        </a>
       </div>
     </div>
   );

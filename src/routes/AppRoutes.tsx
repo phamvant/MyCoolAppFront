@@ -31,7 +31,7 @@ import ExamRoutes from "./ExamRoutes";
 // };
 
 const AppRoutes: React.FC = () => {
-  const basename = import.meta.env.DEV ? "/" : "/MyCoolAppFront/";
+  const basename = "/MyCoolAppFront/";
 
   return (
     <BrowserRouter basename={basename}>

@@ -7,6 +7,7 @@ import ExamTopbar from "./components/ExamTopbar";
 import ExamNavigateButton from "./components/ExamNavigationButton";
 import { dummyQuestions } from "./components/dummy";
 import { OpenQuestion } from "../../components/question/OpenQuestion";
+import { useNavigate, useParams } from "react-router-dom";
 
 const QuestionRenderer = (
   question: Question,
@@ -83,10 +84,29 @@ const QuestionRenderer = (
 };
 
 const Exam: React.FC = () => {
-  const [questions, setQuestions] = useState<Question[]>(dummyQuestions);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [timeLeft, setTimeLeft] = useState<number>(600); // 10 minutes in seconds
+  useEffect(() => {
+    if (!id) {
+      navigate("/error");
+    }
+  }, [id, navigate]);
+
+  const [questions, setQuestions] = useState<Question[]>(() => {
+    const savedQuestions = localStorage.getItem("examQuestions");
+    return savedQuestions ? JSON.parse(savedQuestions) : dummyQuestions;
+  });
+
+  const [currentIndex, setCurrentIndex] = useState<number>(() => {
+    const savedIndex = localStorage.getItem("examCurrentIndex");
+    return savedIndex ? parseInt(savedIndex) : 0;
+  });
+
+  const [timeLeft, setTimeLeft] = useState<number>(() => {
+    const savedTime = localStorage.getItem("examTimeLeft");
+    return savedTime ? parseInt(savedTime) : 600;
+  });
 
   const beforeUnloadHandler = (event: BeforeUnloadEvent) => {
     event.preventDefault();
@@ -100,6 +120,18 @@ const Exam: React.FC = () => {
       window.removeEventListener("beforeunload", beforeUnloadHandler);
     };
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("examQuestions", JSON.stringify(questions));
+  }, [questions]);
+
+  useEffect(() => {
+    localStorage.setItem("examCurrentIndex", currentIndex.toString());
+  }, [currentIndex]);
+
+  useEffect(() => {
+    localStorage.setItem("examTimeLeft", timeLeft.toString());
+  }, [timeLeft]);
 
   useEffect(() => {
     const timer = setInterval(() => {

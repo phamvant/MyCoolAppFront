@@ -12,7 +12,10 @@ const Topbar: React.FC = () => {
         <button className="md:hidden">
           <Menu className="w-6 h-6" />
         </button>
-        <a href="/" className="text-3xl font-bold text-primary ml-4">
+        <a
+          href={`/MyCoolAppFront/`}
+          className="text-3xl font-bold text-primary ml-4"
+        >
           GMAT
         </a>
       </div>

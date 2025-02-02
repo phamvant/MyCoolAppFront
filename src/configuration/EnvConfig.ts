@@ -5,16 +5,17 @@ interface TConfig {
 let configuration;
 
 const configDev: TConfig = {
-  BACKEND_URL: process.env.BACKEND_URL_DEV ?? "http://localhost:8080/api/v1",
+  BACKEND_URL:
+    import.meta.env.VITE_BACKEND_URL_DEV ?? "http://localhost:8080/api/v1",
 };
 
 const configPro: TConfig = {
-  BACKEND_URL: process.env.BACKEND_URL,
+  BACKEND_URL: import.meta.env.VITE_BACKEND_URL,
 };
 
-if (process.env.ENV === "development") {
+if (import.meta.env.VITE_ENV === "development") {
   configuration = configDev;
-} else if (process.env.ENV === "production") {
+} else if (import.meta.env.VITE_ENV === "production") {
   configuration = configPro;
 }
 
