@@ -7,7 +7,7 @@ export const Landing: React.FC = () => {
         .GMAT Simulation System
       </h1>
       <img
-        src="https://i.pinimg.com/originals/b8/ba/79/b8ba798cc393f599e41b7d2a52ea0ee2.gif"
+        src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/333c5a73116977.5c059cc9ab3d6.gif"
         alt="landing"
         className=" mx-auto"
       />
