@@ -1,6 +1,6 @@
-import { Settings, BookOpen } from "lucide-react";
+import { Settings, BookOpen, Home } from "lucide-react";
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar: React.FC = () => {
   const NavItem: React.FC<{
@@ -10,11 +10,13 @@ const Sidebar: React.FC = () => {
     children?: React.ReactNode;
   }> = ({ to, label, className, children }) => {
     const location = useLocation();
-    const isActive = location.pathname.includes(to);
+    const isActive =
+      (to.includes(location.pathname) && location.pathname !== "/") ||
+      (label === "Home" && location.pathname === "/");
 
     return (
-      <a
-        href={to}
+      <Link
+        to={to}
         className={`
           flex items-center p-4 rounded-3xl
           transition-all duration-300
@@ -27,25 +29,20 @@ const Sidebar: React.FC = () => {
       >
         {children}
         <span className="ml-3">{label}</span>
-      </a>
+      </Link>
     );
   };
 
   return (
     <aside className="rounded-xl bg-card hidden md:block">
       <nav className="p-5 space-y-4">
-        <NavItem to="/MyCoolAppFront/practice" label="Practice">
+        <NavItem to="/" label="Home">
+          <Home className="w-6 h-5" />
+        </NavItem>
+        <NavItem to="/exams" label="Exams">
           <BookOpen className="w-6 h-5" />
         </NavItem>
-        {/* <NavItem to="/requests" label="Requests">
-          <button className="relative">
-            <MessageCircle className="w-6 h-5" />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
-              3
-            </span>
-          </button>
-        </NavItem> */}
-        <NavItem to="/MyCoolAppFront/settings" label="Settings">
+        <NavItem to="/settings" label="Settings">
           <Settings className="w-6 h-5" />
         </NavItem>
       </nav>

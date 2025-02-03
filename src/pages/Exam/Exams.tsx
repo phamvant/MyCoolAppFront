@@ -132,13 +132,7 @@ const Exams: React.FC = () => {
     fetchExams();
   }, [authentication, loading]);
 
-  useEffect(() => {
-    console.log(examInstances);
-  }, [examInstances]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {}, [examInstances, isLoading]);
 
   return (
     <div className="p-6 overflow-auto">

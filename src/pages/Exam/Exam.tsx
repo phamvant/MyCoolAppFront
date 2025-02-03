@@ -115,6 +115,7 @@ const Exam: React.FC = () => {
           }
         );
         const data = (await response.json()) as ExamInstanceResponse;
+        console.log(data);
         if (!response.ok) {
           throw new Error("Failed to fetch exam instance");
         }
@@ -204,25 +205,27 @@ const Exam: React.FC = () => {
   }
 
   return (
-    <div className="h-full p-6 flex flex-col">
-      <div className="flex justify-between items-center mb-6">
-        <ExamTopbar currentIndex={currentIndex} questions={questions} />
-        <div className="flex items-center gap-2">
-          <Clock className="w-5 h-5 mr-2" />
-          <p className="w-10">{formatTime(timeLeft)}</p>
+    <div className="h-screen xl:pt-20">
+      <div className="p-6 flex flex-col max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-6">
+          <ExamTopbar currentIndex={currentIndex} questions={questions} />
+          <div className="flex items-center gap-2">
+            <Clock className="w-5 h-5 mr-2" />
+            <p className="w-10">{formatTime(timeLeft)}</p>
+          </div>
         </div>
-      </div>
-      <div className="flex justify-between items-center mx-auto gap-10 mb-10">
-        <ExamNavigateButton
-          currentIndex={currentIndex}
-          setCurrentIndex={setCurrentIndex}
-          questions={questions}
-        />
-      </div>
-      <div className="grid grid-cols-2 bg-gray-100/50 rounded-xl shadow-md p-20 gap-10 h-fit">
-        <p>{questions[currentIndex]?.question}</p>
-        {questions[currentIndex] &&
-          QuestionRenderer(questions[currentIndex], setQuestions)}
+        <div className="flex justify-between items-center mx-auto gap-10 mb-10">
+          <ExamNavigateButton
+            currentIndex={currentIndex}
+            setCurrentIndex={setCurrentIndex}
+            questions={questions}
+          />
+        </div>
+        <div className="grid grid-cols-2 bg-gray-100/50 rounded-xl shadow-md p-20 gap-10 h-fit">
+          <p>{questions[currentIndex]?.question}</p>
+          {questions[currentIndex] &&
+            QuestionRenderer(questions[currentIndex], setQuestions)}
+        </div>
       </div>
     </div>
   );
