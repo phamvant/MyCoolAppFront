@@ -1,4 +1,4 @@
-import { Settings, Building } from "lucide-react";
+import { Settings, BookOpen } from "lucide-react";
 import React from "react";
 import { useLocation } from "react-router-dom";
 
@@ -32,10 +32,10 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="rounded-xl bg-card lg:min-w-[350px] hidden md:block">
+    <aside className="rounded-xl bg-card hidden md:block">
       <nav className="p-5 space-y-4">
-        <NavItem to="/MyCoolAppFront/exams" label="Exams">
-          <Building className="w-6 h-5" />
+        <NavItem to="/MyCoolAppFront/practice" label="Practice">
+          <BookOpen className="w-6 h-5" />
         </NavItem>
         {/* <NavItem to="/requests" label="Requests">
           <button className="relative">

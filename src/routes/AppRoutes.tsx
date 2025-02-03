@@ -13,25 +13,10 @@ import RequestRoutes from "./RequestRoutes";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
 import ExamRoutes from "./ExamRoutes";
-
-// const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
-//   children,
-// }) => {
-//   const { authentication, loading } = useAuth();
-
-//   if (loading) {
-//     return <div>Loading...</div>;
-//   }
-
-//   if (!authentication && !loading) {
-//     return <Navigate to="/login" replace />;
-//   }
-
-//   return <>{children}</>;
-// };
+import { Landing } from "../pages/Landing";
 
 const AppRoutes: React.FC = () => {
-  const basename = "/MyCoolAppFront/";
+  const basename = "/MyCoolAppFront";
 
   return (
     <BrowserRouter basename={basename}>
@@ -42,7 +27,7 @@ const AppRoutes: React.FC = () => {
             {UserRoutes}
             {RequestRoutes}
             {ExamRoutes}
-            <Route path="/" element={<Navigate to="/exams" replace />} />
+            <Route path="/" element={<Landing />} />
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<Navigate to="/404" replace />} />
           </Route>

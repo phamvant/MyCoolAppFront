@@ -8,6 +8,8 @@ import ExamNavigateButton from "./components/ExamNavigationButton";
 import { dummyQuestions } from "./components/dummy";
 import { OpenQuestion } from "../../components/question/OpenQuestion";
 import { useNavigate, useParams } from "react-router-dom";
+import configuration from "../../configuration/EnvConfig";
+import { ExamInstanceResponse } from "./Exams";
 
 const QuestionRenderer = (
   question: Question,
@@ -86,26 +88,66 @@ const QuestionRenderer = (
 const Exam: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [examInstance, setExamInstance] = useState<ExamInstanceResponse | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) {
       navigate("/error");
     }
-  }, [id, navigate]);
+  }, [id, navigate, examInstance]);
+
+  const clearLocalStorage = () => {
+    localStorage.removeItem(`exam-${id}`);
+  };
+
+  useEffect(() => {
+    const fetchExamInstance = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          `${configuration.BACKEND_URL}/exam-instances/${id}`,
+          {
+            credentials: "include",
+          }
+        );
+        const data = (await response.json()) as ExamInstanceResponse;
+        if (!response.ok) {
+          throw new Error("Failed to fetch exam instance");
+        }
+        setExamInstance(data);
+      } catch (error) {
+        console.log(error);
+        setIsError("Failed to fetch exam instance");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchExamInstance();
+  }, [id]);
 
   const [questions, setQuestions] = useState<Question[]>(() => {
-    const savedQuestions = localStorage.getItem("examQuestions");
-    return savedQuestions ? JSON.parse(savedQuestions) : dummyQuestions;
+    const savedQuestions = localStorage.getItem(`exam-${id}`);
+    return savedQuestions
+      ? JSON.parse(savedQuestions).questions
+      : dummyQuestions;
   });
 
   const [currentIndex, setCurrentIndex] = useState<number>(() => {
-    const savedIndex = localStorage.getItem("examCurrentIndex");
-    return savedIndex ? parseInt(savedIndex) : 0;
+    const savedIndex = localStorage.getItem(`exam-${id}`);
+    return savedIndex ? JSON.parse(savedIndex).currentIndex : 0;
   });
 
   const [timeLeft, setTimeLeft] = useState<number>(() => {
-    const savedTime = localStorage.getItem("examTimeLeft");
-    return savedTime ? parseInt(savedTime) : 600;
+    const savedExam = localStorage.getItem(`exam-${id}`);
+    if (savedExam === "0") {
+      clearLocalStorage();
+    }
+    return savedExam ? JSON.parse(savedExam).timeLeft : 600;
   });
 
   const beforeUnloadHandler = (event: BeforeUnloadEvent) => {
@@ -122,16 +164,16 @@ const Exam: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("examQuestions", JSON.stringify(questions));
-  }, [questions]);
-
-  useEffect(() => {
-    localStorage.setItem("examCurrentIndex", currentIndex.toString());
-  }, [currentIndex]);
-
-  useEffect(() => {
-    localStorage.setItem("examTimeLeft", timeLeft.toString());
-  }, [timeLeft]);
+    localStorage.setItem(
+      `exam-${id}`,
+      JSON.stringify({
+        examId: id,
+        currentIndex: currentIndex,
+        questions: questions,
+        timeLeft: timeLeft,
+      })
+    );
+  }, [timeLeft, currentIndex, questions, id]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -152,6 +194,14 @@ const Exam: React.FC = () => {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error: {isError}</div>;
+  }
 
   return (
     <div className="h-full p-6 flex flex-col">

@@ -13,7 +13,7 @@ const Topbar: React.FC = () => {
           <Menu className="w-6 h-6" />
         </button>
         <a
-          href={`/MyCoolAppFront/`}
+          href={`/MyCoolAppFront`}
           className="text-3xl font-bold text-primary ml-4"
         >
           GMAT

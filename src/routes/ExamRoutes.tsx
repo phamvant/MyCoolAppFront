@@ -4,8 +4,8 @@ import Exam from "../pages/Exam/Exam";
 
 const ExamRoutes = (
   <>
-    <Route path="/exams" element={<Exams />} />
-    <Route path="/exams/:id" element={<Exam />} />
+    <Route path="/practice" element={<Exams />} />
+    <Route path="/practice/:id" element={<Exam />} />
   </>
 );
 
