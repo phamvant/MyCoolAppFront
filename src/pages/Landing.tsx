@@ -7,9 +7,9 @@ export const Landing: React.FC = () => {
         .GMAT Simulation System
       </h1>
       <img
-        src="https://cdni.iconscout.com/illustration/premium/thumb/exam-stock-flat-mei20-01-illustration-download-in-svg-png-gif-file-formats--timetable-study-education-schedule-calendar-pack-school-illustrations-7402077.png?f=webp"
+        src="https://i.pinimg.com/originals/b8/ba/79/b8ba798cc393f599e41b7d2a52ea0ee2.gif"
         alt="landing"
-        className="w-1/2 mx-auto"
+        className=" mx-auto"
       />
     </div>
   );
