@@ -33,8 +33,8 @@ const AppRoutes: React.FC = () => {
             <Route path="*" element={<Navigate to="/404" replace />} />
           </Route>
         </Route>
-        <Route path="/exams/:id" element={<Exam />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/exams/:id" element={<Exam />} />
       </Routes>
     </BrowserRouter>
   );

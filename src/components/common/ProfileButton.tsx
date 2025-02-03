@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { User, Settings, LogOut } from "lucide-react";
 import { useAuth } from "../../hooks/UseAuth";
+import { Link } from "react-router-dom";
 
 const ProfileButton: React.FC = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -33,12 +34,12 @@ const ProfileButton: React.FC = () => {
         onClick={() => setShowProfileMenu(!showProfileMenu)}
       >
         {!authentication ? (
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="px-4 py-2 text-white bg-primary rounded-full hover:bg-primary/90"
           >
             Login
-          </a>
+          </Link>
         ) : (
           <img
             className="size-8 rounded-full"
