@@ -74,7 +74,6 @@ const Exams: React.FC = () => {
           })
         )) as [ExamResponse[], ExamInstanceResponse[]];
 
-        console.log(examData);
         if (!Array.isArray(examData)) {
           throw new Error("Invalid data format");
         }

@@ -100,10 +100,6 @@ const Exam: React.FC = () => {
     }
   }, [id, navigate, examInstance]);
 
-  const clearLocalStorage = () => {
-    localStorage.removeItem(`exam-${id}`);
-  };
-
   useEffect(() => {
     const fetchExamInstance = async () => {
       try {
@@ -131,25 +127,24 @@ const Exam: React.FC = () => {
     fetchExamInstance();
   }, [id]);
 
-  const [questions, setQuestions] = useState<Question[]>(() => {
-    const savedQuestions = localStorage.getItem(`exam-${id}`);
-    return savedQuestions
-      ? JSON.parse(savedQuestions).questions
-      : dummyQuestions;
-  });
+  const [questions, setQuestions] = useState<Question[]>(dummyQuestions);
 
-  const [currentIndex, setCurrentIndex] = useState<number>(() => {
-    const savedIndex = localStorage.getItem(`exam-${id}`);
-    return savedIndex ? JSON.parse(savedIndex).currentIndex : 0;
-  });
-
-  const [timeLeft, setTimeLeft] = useState<number>(() => {
+  useEffect(() => {
     const savedExam = localStorage.getItem(`exam-${id}`);
-    if (savedExam === "0") {
-      clearLocalStorage();
+    if (savedExam) {
+      if (JSON.parse(savedExam).timeLeft === 0) {
+        localStorage.removeItem(`exam-${id}`);
+        return;
+      }
+      const parsedExam = JSON.parse(savedExam);
+      setQuestions(parsedExam.questions);
+      setCurrentIndex(parsedExam.currentIndex);
+      setTimeLeft(parsedExam.timeLeft);
     }
-    return savedExam ? JSON.parse(savedExam).timeLeft : 600;
-  });
+  }, [id]);
+
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [timeLeft, setTimeLeft] = useState<number>(600);
 
   const beforeUnloadHandler = (event: BeforeUnloadEvent) => {
     event.preventDefault();

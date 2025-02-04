@@ -7,7 +7,7 @@ export const validateInstance = (response: ExamInstanceResponse) => {
   if (!response.examId || typeof response.examId !== "number") {
     throw new Error("Invalid instance exam");
   }
-  if (!response.startDate || typeof response.startDate !== "string") {
+  if (!response.startDate || !Array.isArray(response.startDate)) {
     throw new Error("Invalid instance start date");
   }
   //   if (
