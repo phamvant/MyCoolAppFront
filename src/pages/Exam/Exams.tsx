@@ -4,6 +4,7 @@ import ProgressBar from "../../components/common/ProgressBar";
 import configuration from "../../configuration/EnvConfig";
 import { validateInstance } from "./components/Validation";
 import { useAuth } from "../../hooks/UseAuth";
+import Dialog from "../../components/common/InstanceCreateDialog";
 
 interface Exam extends ExamResponse {
   author: string;
@@ -174,9 +175,59 @@ const Exams: React.FC = () => {
   );
 };
 
-const ExamCard: React.FC<{ exam: Exam }> = ({ exam }) => {
+const ExamCard: React.FC<{
+  exam: Exam;
+}> = ({ exam }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [instance, setInstance] = useState<ExamInstanceResponse | null>(null);
+
+  useEffect(() => {
+    if (!isDialogOpen) {
+      setStatus("idle");
+    }
+  }, [isDialogOpen]);
+
+  const createNewInstance = async (examId: string) => {
+    setStatus("loading");
+    try {
+      const response = await fetch(
+        `${configuration.BACKEND_URL}/exam-instances/create/${examId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const data = (await response.json()) as ExamInstanceResponse;
+      console.log(data);
+      setStatus("success");
+      setInstance(data);
+    } catch (error) {
+      console.error("Error fetching URL:", error);
+      setStatus("error");
+    }
+  };
+
   return (
-    <div className="w-full md:w-auto bg-card rounded-2xl shadow-md min-w-[16rem] gap-6 p-6 hover:scale-105 transition-all duration-300">
+    <div className="relative w-full md:w-auto bg-card rounded-2xl shadow-md min-w-[16rem] gap-6 p-6 hover:scale-105 transition-all duration-300 ">
+      <Dialog
+        isOpen={isDialogOpen}
+        onClose={() => {
+          setIsDialogOpen(false);
+        }}
+        onConfirm={() => {
+          createNewInstance(`${exam.id}`);
+        }}
+        status={status}
+        instanceId={instance?.id ?? null}
+        title={"Take Test"}
+        message={"Are you sure you want to take this test?"}
+      />
       <p className="text-textMuted/60 mb-6 text-right">{exam.author}</p>
       <div className="flex flex-col w-full items-center size-fit gap-6">
         <div className="flex-1 flex items-center justify-center">
@@ -190,11 +241,14 @@ const ExamCard: React.FC<{ exam: Exam }> = ({ exam }) => {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">{exam.name}</h3>
           </div>
-          <a href={`/MyCoolAppFront/exams/${exam.id}`} target="_blank">
-            <div className="bg-primary text-white px-4 py-2 rounded-full">
-              Take Test
-            </div>
-          </a>
+          <div
+            className="bg-primary text-white px-4 py-2 rounded-full cursor-pointer"
+            onClick={() => {
+              setIsDialogOpen(true);
+            }}
+          >
+            Take Test
+          </div>
         </div>
       </div>
     </div>
@@ -207,7 +261,9 @@ const ExamInstanceCard: React.FC<{ instance: ExamInstance }> = ({
   return (
     <div className="w-full md:w-auto bg-white p-6 rounded-2xl shadow-md flex flex-col items-center size-fit min-w-[16rem] gap-6 hover:scale-105 transition-all duration-300">
       <div className="w-full flex items-center justify-between gap-10">
-        {instance.progress && <ProgressBar progress={instance.progress} />}
+        {instance.progress !== undefined && (
+          <ProgressBar progress={instance.progress} />
+        )}
       </div>
       <div className="flex-1 flex items-center justify-center">
         <img

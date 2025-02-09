@@ -23,7 +23,7 @@ const Topbar: React.FC = () => {
         <input
           type="text"
           placeholder="Search..."
-          className="w-96 px-3 py-2 rounded-full bg-gray-100 hidden md:block"
+          className="w-96 px-3 py-2 rounded-full bg-gray-100 hidden md:block focus:outline-none text-text"
         />
       </div>
       <div className="flex items-center space-x-4">

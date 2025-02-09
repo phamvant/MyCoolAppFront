@@ -1,4 +1,4 @@
-import { Clock } from "lucide-react";
+import { Clock, Check, Loader2, Save, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Question } from "../../components/types/exam";
 import { MultipleChoiceQuestion } from "../../components/question/MultipleChoiceQuestion";
@@ -191,22 +191,81 @@ const Exam: React.FC = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (isError) {
+    navigate("/error");
   }
 
-  if (isError) {
-    return <div>Error: {isError}</div>;
-  }
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+
+  const handleSave = async () => {
+    setSaveStatus("saving");
+    const savePromise = new Promise((resolve, reject) =>
+      setTimeout(() => {
+        if (Math.random() > 0.5) {
+          resolve(true);
+        } else {
+          reject();
+        }
+      }, 2000)
+    );
+
+    savePromise
+      .then(() => {
+        setSaveStatus("saved");
+        setTimeout(() => {
+          setSaveStatus("idle");
+        }, 2000);
+      })
+      .catch(() => {
+        setSaveStatus("error");
+      });
+  };
 
   return (
     <div className="h-screen xl:pt-20">
       <div className="p-6 flex flex-col max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <ExamTopbar currentIndex={currentIndex} questions={questions} />
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ">
             <Clock className="w-5 h-5 mr-2" />
             <p className="w-10">{formatTime(timeLeft)}</p>
+            <button
+              onClick={handleSave}
+              disabled={saveStatus === "saving"}
+              className={`text-white px-4 py-2 rounded-full flex items-center ml-4 ${
+                saveStatus === "saving"
+                  ? "bg-gray-400"
+                  : saveStatus === "saved"
+                  ? "bg-green-500 hover:bg-green-600"
+                  : saveStatus === "error"
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-primary hover:bg-primary/80"
+              }`}
+            >
+              {saveStatus === "saving" ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : saveStatus === "saved" ? (
+                <>
+                  <Check className="w-5 h-5 mr-2" />
+                  Saved
+                </>
+              ) : saveStatus === "error" ? (
+                <>
+                  <X className="w-5 h-5 mr-2" />
+                  Error
+                </>
+              ) : (
+                <>
+                  <Save className="w-5 h-5 mr-2" />
+                  Save
+                </>
+              )}
+            </button>
           </div>
         </div>
         <div className="flex justify-between items-center mx-auto gap-10 mb-10">

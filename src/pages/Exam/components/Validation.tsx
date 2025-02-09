@@ -16,7 +16,10 @@ export const validateInstance = (response: ExamInstanceResponse) => {
   //   ) {
   //     throw new Error("Invalid instance favourite");
   //   }
-  if (!response.progress || typeof response.progress !== "number") {
+  if (
+    (!response.progress || typeof response.progress !== "number") &&
+    response.progress !== 0
+  ) {
     throw new Error("Invalid instance progress");
   }
   return response;
