@@ -91,8 +91,9 @@ const Exam: React.FC = () => {
   const [examInstance, setExamInstance] = useState<ExamInstanceResponse | null>(
     null
   );
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState<string | null>(null);
+  const [examState, setExamState] = useState<"idle" | "loading" | "error">(
+    "idle"
+  );
 
   useEffect(() => {
     if (!id) {
@@ -103,7 +104,7 @@ const Exam: React.FC = () => {
   useEffect(() => {
     const fetchExamInstance = async () => {
       try {
-        setIsLoading(true);
+        setExamState("loading");
         const response = await fetch(
           `${configuration.BACKEND_URL}/exam-instances/${id}`,
           {
@@ -111,16 +112,16 @@ const Exam: React.FC = () => {
           }
         );
         const data = (await response.json()) as ExamInstanceResponse;
-        console.log(data);
         if (!response.ok) {
           throw new Error("Failed to fetch exam instance");
         }
         setExamInstance(data);
+        setExamState("idle");
       } catch (error) {
-        console.log(error);
-        setIsError("Failed to fetch exam instance");
+        console.error(error);
+        setExamState("error");
       } finally {
-        setIsLoading(false);
+        setExamState("idle");
       }
     };
 
@@ -191,7 +192,7 @@ const Exam: React.FC = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  if (isError) {
+  if (examState === "error") {
     navigate("/error");
   }
 

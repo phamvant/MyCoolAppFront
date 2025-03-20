@@ -10,7 +10,6 @@ interface Exam extends ExamResponse {
   author: string;
   favorite?: boolean;
   image: string;
-  public: boolean;
 }
 
 interface ExamResponse {
@@ -38,7 +37,7 @@ const img =
 const Exams: React.FC = () => {
   const [exams, setExams] = useState<Exam[]>([]);
   const [examInstances, setExamInstances] = useState<ExamInstance[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
 
   const { authentication, loading } = useAuth();
 
@@ -60,7 +59,6 @@ const Exams: React.FC = () => {
           }),
         ]);
 
-        // Check if any requests failed
         const [examData, instanceData] = (await Promise.all(
           responses.map(async (result) => {
             if (result.status === "fulfilled") {
@@ -75,11 +73,13 @@ const Exams: React.FC = () => {
           })
         )) as [ExamResponse[], ExamInstanceResponse[]];
 
+        console.log(examData);
+
         if (!Array.isArray(examData)) {
           throw new Error("Invalid data format");
         }
 
-        const validatedExams = examData.map((exam) => {
+        const validatedExams: ExamResponse[] = examData.map((exam) => {
           if (!exam.id || typeof exam.id !== "number") {
             throw new Error("Invalid exam ID");
           }
@@ -89,22 +89,20 @@ const Exams: React.FC = () => {
           if (!exam.description || typeof exam.description !== "string") {
             throw new Error("Invalid exam description");
           }
-          if (!exam.public) {
-            exam.public = false;
-          }
 
           return exam;
         });
 
-        const validatedInstances = instanceData.map((instance) => {
-          return validateInstance(instance);
-        });
+        const validatedInstances: ExamInstanceResponse[] = instanceData.map(
+          (instance) => {
+            return validateInstance(instance);
+          }
+        );
 
-        const mappedExams = validatedExams.map((exam) => {
+        const mappedExams: Exam[] = validatedExams.map((exam) => {
           return {
             ...exam,
             favorite: false,
-            public: false,
             image: img,
             author: "John Doe",
           };
@@ -112,14 +110,14 @@ const Exams: React.FC = () => {
 
         setExams(mappedExams);
 
-        setExamInstances(() => {
-          return validatedInstances.map((instance) => {
-            return {
-              ...instance,
-              exam: mappedExams.find((exam) => exam.id === instance.examId)!,
-            };
-          });
+        const test: ExamInstance[] = validatedInstances.map((instance) => {
+          return {
+            ...instance,
+            exam: mappedExams.find((exam) => exam.id === instance.examId)!,
+          };
         });
+
+        setExamInstances(test);
 
         setIsLoading(false);
       } catch (error) {
@@ -129,10 +127,16 @@ const Exams: React.FC = () => {
       }
     };
 
-    fetchExams();
+    if (!loading) {
+      fetchExams();
+    }
   }, [authentication, loading]);
 
-  useEffect(() => {}, [examInstances, isLoading]);
+  // useEffect(() => {
+  //   console.log(examInstances);
+  // }, [examInstances]);
+
+  // return <></>;
 
   return (
     <div className="p-6 overflow-auto">
@@ -204,7 +208,7 @@ const ExamCard: React.FC<{
         }
       );
       const data = (await response.json()) as ExamInstanceResponse;
-      console.log(data);
+
       setStatus("success");
       setInstance(data);
     } catch (error) {
