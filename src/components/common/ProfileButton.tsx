@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { User, Settings, LogOut } from "lucide-react";
 import { useAuth } from "../../hooks/UseAuth";
 import { Link } from "react-router-dom";
+import configuration from "../../configuration/EnvConfig";
 
 const ProfileButton: React.FC = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -10,7 +11,7 @@ const ProfileButton: React.FC = () => {
   const { authentication } = useAuth();
 
   const onLogout = () => {
-    window.open(`http://localhost:8080/api/v1/auth/logout`, "_self");
+    window.open(`${configuration.BACKEND_URL}/auth/logout`, "_self");
   };
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -14,10 +14,19 @@ import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
 import ExamRoutes from "./ExamRoutes";
 import { Landing } from "../pages/Landing";
-import Exam from "../pages/Exam/Exam";
+import configuration from "../configuration/EnvConfig";
 
 const AppRoutes: React.FC = () => {
   const basename = "/MyCoolAppFront";
+
+  const initializeCsrf = async () => {
+    await fetch(`${configuration.BACKEND_URL}/csrf-token`, {
+      credentials: "include",
+    });
+  };
+  useEffect(() => {
+    initializeCsrf();
+  }, []);
 
   return (
     <BrowserRouter basename={basename}>
@@ -34,7 +43,7 @@ const AppRoutes: React.FC = () => {
           </Route>
         </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/exams/:id" element={<Exam />} />
+        {/* <Route path="/exams/:id" element={<Exam />} /> */}
       </Routes>
     </BrowserRouter>
   );

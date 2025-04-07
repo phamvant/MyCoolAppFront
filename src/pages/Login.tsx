@@ -2,13 +2,14 @@ import { KeyIcon } from "lucide-react";
 import React from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/UseAuth";
+import configuration from "../configuration/EnvConfig";
 
 const Login: React.FC = () => {
   const { authentication, loading } = useAuth();
 
   const handleGoogleLogin = () => {
     window.open(
-      `http://localhost:8080/api/v1/oauth2/authorization/google`,
+      `${configuration.BACKEND_URL}/oauth2/authorization/google`,
       "_self"
     );
   };

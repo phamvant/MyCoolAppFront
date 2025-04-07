@@ -1,18 +1,21 @@
+import React from "react";
 import { BookmarkIcon } from "lucide-react";
-import { Question } from "../../../components/types/exam";
+import { Question } from "../../../types/exam";
 
-export const ExamTopbar: React.FC<{
+interface ExamTopbarProps {
   currentIndex: number;
   questions: Question[];
-}> = ({ currentIndex, questions }) => {
+}
+
+const ExamTopbar: React.FC<ExamTopbarProps> = ({ currentIndex, questions }) => {
   return (
-    <div className="flex items-center gap-2">
-      <p className="text-sm text-gray-500 w-28">
+    <div className="flex items-center gap-4">
+      <div className="text-lg font-medium">
         Question {currentIndex + 1} of {questions.length}
-      </p>
-      <div className="w-48 h-2 bg-gray-200 rounded-full">
+      </div>
+      <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
         <div
-          className="h-full bg-primary rounded-full transition-all"
+          className="h-full bg-primary transition-all duration-300"
           style={{
             width: `${((currentIndex + 1) / questions.length) * 100}%`,
           }}

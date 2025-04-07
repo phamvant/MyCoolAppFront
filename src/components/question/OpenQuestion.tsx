@@ -1,4 +1,4 @@
-import { TOpenQuestion } from "../types/exam";
+import { TOpenQuestion } from "../../types/exam";
 import { useRef, useEffect } from "react";
 
 interface OpenQuestionProps {

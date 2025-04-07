@@ -1,4 +1,4 @@
-export type QuestionType = "single" | "multiple" | "open";
+export type QuestionType = "single" | "multiple_choice" | "open";
 
 export interface BaseQuestion {
   id: number;
@@ -6,17 +6,23 @@ export interface BaseQuestion {
   type: QuestionType;
   question: string;
   isAnswered: boolean;
+  readOnly: boolean;
+}
+
+export interface QuestionOption {
+  id: number;
+  content: string;
 }
 
 export interface TMChoiceQuestion extends BaseQuestion {
   userAnswer: number[];
-  options: string[];
-  type: "multiple";
+  options: QuestionOption[];
+  type: "multiple_choice";
 }
 
 export interface TSChoiceQuestion extends BaseQuestion {
   userAnswer: number[];
-  options: string[];
+  options: QuestionOption[];
   type: "single";
 }
 

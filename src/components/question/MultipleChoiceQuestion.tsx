@@ -1,4 +1,4 @@
-import { TMChoiceQuestion } from "../types/exam";
+import { TMChoiceQuestion } from "../../types/exam";
 
 interface MultipleChoiceProps {
   question: TMChoiceQuestion;
@@ -14,17 +14,21 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceProps> = ({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4">
-        {question.options.map((option, index) => (
+        {question.options.map((option) => (
           <button
-            key={option}
+            key={option.id}
             className={`p-4 text-left rounded-lg border ${
-              selectedOptions.includes(index + 1)
+              selectedOptions.includes(option.id)
                 ? "bg-primary/10 border-primary shadow-md"
                 : "border-gray-200 hover:bg-primary/5"
             } transition-all`}
-            onClick={() => onSelect(index + 1)}
+            onClick={() => {
+              if (!question.readOnly) {
+                onSelect(option.id);
+              }
+            }}
           >
-            {option}
+            {option.content}
           </button>
         ))}
       </div>

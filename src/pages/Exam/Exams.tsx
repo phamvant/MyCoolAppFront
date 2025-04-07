@@ -5,6 +5,7 @@ import configuration from "../../configuration/EnvConfig";
 import { validateInstance } from "./components/Validation";
 import { useAuth } from "../../hooks/UseAuth";
 import Dialog from "../../components/common/InstanceCreateDialog";
+import { getCsrfToken } from "../../services/examService";
 
 interface Exam extends ExamResponse {
   author: string;
@@ -72,8 +73,6 @@ const Exams: React.FC = () => {
             return [] as ExamResponse[] | ExamInstanceResponse[];
           })
         )) as [ExamResponse[], ExamInstanceResponse[]];
-
-        console.log(examData);
 
         if (!Array.isArray(examData)) {
           throw new Error("Invalid data format");
@@ -197,11 +196,13 @@ const ExamCard: React.FC<{
   const createNewInstance = async (examId: string) => {
     setStatus("loading");
     try {
+      const csrfToken = getCsrfToken();
       const response = await fetch(
         `${configuration.BACKEND_URL}/exam-instances/create/${examId}`,
         {
           method: "POST",
           headers: {
+            "X-XSRF-TOKEN": csrfToken ?? "", // Spring expects this header
             "Content-Type": "application/json",
           },
           credentials: "include",

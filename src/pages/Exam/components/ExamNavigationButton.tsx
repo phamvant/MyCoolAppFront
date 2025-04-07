@@ -1,42 +1,49 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Question } from "../../../components/types/exam";
+import { Question } from "../../../types/exam";
 
 const ExamNavigateButton: React.FC<{
   currentIndex: number;
   setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
   questions: Question[];
-}> = ({ currentIndex, setCurrentIndex, questions }) => {
+  onSubmit?: () => void;
+}> = ({ currentIndex, setCurrentIndex, questions, onSubmit }) => {
+  const handleNext = () => {
+    if (currentIndex === questions.length - 1 && onSubmit) {
+      onSubmit();
+    } else {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
   return (
-    <>
+    <div className="flex gap-4">
       <button
-        className={`text-white px-4 py-2 rounded-full min-w-[150px] flex items-center gap-2 shadow-md
-              ${currentIndex === 0 ? "bg-gray-200" : "bg-primary"}
+        className={`text-white p-4 rounded-full flex items-center gap-2 shadow-md transition-all
+              ${
+                currentIndex === 0
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-primary hover:bg-primary/90 active:scale-95"
+              }
               `}
         onClick={() => setCurrentIndex(currentIndex - 1)}
         disabled={currentIndex === 0}
       >
         <ArrowLeft className="size-5" />
-        <p className="text-center w-full">Previous</p>
       </button>
       <button
-        className={`text-white px-4 py-2 rounded-full min-w-[150px] flex items-center gap-2 justify-between shadow-md
+        className={`text-white p-4 rounded-full flex items-center gap-2 justify-between shadow-md transition-all
               ${
-                currentIndex === questions.length - 1 ||
-                !questions[currentIndex].isAnswered
-                  ? "bg-gray-200"
-                  : "bg-primary"
+                !questions[currentIndex]?.isAnswered
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-primary hover:bg-primary/90 active:scale-95"
               }
               `}
-        onClick={() => setCurrentIndex(currentIndex + 1)}
-        disabled={
-          currentIndex === questions.length - 1 ||
-          !questions[currentIndex].isAnswered
-        }
+        onClick={handleNext}
+        disabled={!questions[currentIndex]?.isAnswered}
       >
-        <p className="text-center w-full">Next</p>
         <ArrowRight className="size-5" />
       </button>
-    </>
+    </div>
   );
 };
 
