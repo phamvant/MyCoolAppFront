@@ -45,7 +45,9 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
             .map((q) => q.idx)
             .pop() ?? 0;
 
-        setCurrentIndex(lastAnsweredIndex + 1);
+        setCurrentIndex(
+          lastAnsweredIndex === 0 ? lastAnsweredIndex : lastAnsweredIndex + 1
+        );
 
         setExamState("idle");
       } catch (error) {
@@ -152,7 +154,8 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
         userResponseDTOS: [],
       });
 
-      setQuestions(convertedQuestions);
+      setQuestions((prev) => [...prev, ...convertedQuestions]);
+      setCurrentIndex((prev) => prev + 1);
 
       setExamState("idle");
     } catch (error) {
