@@ -23,6 +23,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceProps> = ({
                 : "border-gray-200 hover:bg-primary/5"
             } transition-all`}
             onClick={() => {
+              console.log(question.readOnly);
               if (!question.readOnly) {
                 onSelect(option.id);
               }

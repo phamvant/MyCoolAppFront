@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   BrowserRouter,
   Routes,
@@ -14,22 +14,21 @@ import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
 import ExamRoutes from "./ExamRoutes";
 import { Landing } from "../pages/Landing";
-import configuration from "../configuration/EnvConfig";
 
 const AppRoutes: React.FC = () => {
-  const basename = "/MyCoolAppFront";
+  // const basename = "/MyCoolAppFront";
 
-  const initializeCsrf = async () => {
-    await fetch(`${configuration.BACKEND_URL}/csrf-token`, {
-      credentials: "include",
-    });
-  };
-  useEffect(() => {
-    initializeCsrf();
-  }, []);
+  // const initializeCsrf = async () => {
+  //   await fetch(`${configuration.BACKEND_URL}/csrf-token`, {
+  //     credentials: "include",
+  //   });
+  // };
+  // useEffect(() => {
+  //   initializeCsrf();
+  // }, []);
 
   return (
-    <BrowserRouter basename={basename}>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Outlet />}>

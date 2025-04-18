@@ -7,6 +7,7 @@ import ExamTopbar from "./components/ExamTopbar";
 import ExamNavigateButton from "./components/ExamNavigationButton";
 import SaveButton from "./components/SaveButton";
 import Timer from "./components/Timer";
+import { ResponseInstance } from "../../types/examResponse";
 
 const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
   const navigate = useNavigate();
@@ -14,9 +15,8 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
     "idle"
   );
   const [questions, setQuestions] = useState<Question[]>([]);
-  // const [selectedAnswer, setSetlectedAnswers] = useState();
+  const [instance, setInstance] = useState<ResponseInstance | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [timeLeft, setTimeLeft] = useState<number>(600);
   const [saveStatus, setSaveStatus] = useState<
     "idle" | "saving" | "saved" | "error"
   >("idle");
@@ -37,6 +37,7 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
           examService.parseResponseQuestion(response);
 
         setQuestions(convertedQuestions);
+        setInstance(response.instanceDTO);
 
         const lastAnsweredIndex =
           convertedQuestions
@@ -70,32 +71,6 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
     return () => {
       window.removeEventListener("beforeunload", beforeUnloadHandler);
     };
-  }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem(
-  //     `exam-${instanceId}`,
-  //     JSON.stringify({
-  //       examId: instanceId,
-  //       currentIndex: currentIndex,
-  //       questions: questions,
-  //       timeLeft: timeLeft,
-  //     })
-  //   );
-  // }, [timeLeft, currentIndex, questions, instanceId]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 0) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
   }, []);
 
   if (examState === "error") {
@@ -149,13 +124,17 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
         instanceId,
         userAnswers
       );
-      const convertedQuestions: Question[] = examService.parseResponseQuestion({
-        ...response,
-        userResponseDTOS: [],
-      });
+      const convertedQuestions: Question[] = examService.parseResponseQuestion(
+        {
+          ...response,
+          userResponseDTOS: [],
+        },
+        currentIndex
+      );
 
       setQuestions((prev) => [...prev, ...convertedQuestions]);
       setCurrentIndex((prev) => prev + 1);
+      setInstance(response.instanceDTO);
 
       setExamState("idle");
     } catch (error) {
@@ -165,19 +144,29 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
   };
 
   return (
-    <div className="h-screen relative">
-      <div className="p-6 flex flex-col max-w-7xl mx-auto pb-32">
-        <div className="flex justify-between items-center mb-6">
-          <ExamTopbar currentIndex={currentIndex} questions={questions} />
-          <div className="flex items-center gap-2">
-            <Timer timeLeft={timeLeft} />
+    <div className="min-h-screen relative flex flex-col">
+      <div className="p-4 md:p-6 flex flex-col max-w-7xl mx-auto pb-32 flex-grow">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+          {instance && (
+            <ExamTopbar
+              currentIndex={currentIndex}
+              questions={questions}
+              instance={instance}
+            />
+          )}
+          <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end">
+            <Timer instanceId={instanceId} />
             <SaveButton saveStatus={saveStatus} onSave={handleSave} />
           </div>
         </div>
 
         {questions.length > 0 && (
-          <div className="grid grid-cols-2 bg-gray-100/50 rounded-xl shadow-md p-20 gap-10 h-fit mb-10">
-            <p>{questions[currentIndex]?.question}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 bg-gray-100/50 rounded-xl shadow-md p-4 md:p-8 lg:p-20 gap-6 lg:gap-10 h-fit mb-10">
+            <div className="prose max-w-none">
+              <p className="text-lg md:text-xl">
+                {questions[currentIndex]?.question}
+              </p>
+            </div>
             {questions[currentIndex] && (
               <QuestionRenderer
                 question={questions[currentIndex]}
@@ -189,7 +178,7 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 py-4">
-        <div className="max-w-7xl mx-auto px-6 flex justify-center items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-center items-center gap-4">
           <ExamNavigateButton
             currentIndex={currentIndex}
             setCurrentIndex={setCurrentIndex}

@@ -25,6 +25,8 @@ export interface ResponseInstance {
   startDate: string;
   currentDifficultLevel: string;
   currentQuestionIdx: number;
+  correctAnswerNumber: number;
+  incorrectAnswerNumber: number;
 }
 
 export interface UserResponse {

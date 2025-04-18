@@ -1,43 +1,43 @@
-# Build stage
-FROM --platform=linux/arm64 node:20-alpine AS build
+# # # Build stage
+# FROM --platform=arm64 node:20-alpine AS build
 
-WORKDIR /app
+# # WORKDIR /app
 
-EXPOSE 4173
+# # EXPOSE 4173
 
-# Define build arguments
-ARG VITE_ENV
-ARG VITE_BACKEND_URL_DEV
+# # # Define build arguments
+# # ARG VITE_ENV
+# ARG VITE_BACKEND_URL
 
-# Set environment variables for Vite build
-ENV VITE_ENV=$VITE_ENV
-ENV VITE_BACKEND_URL_DEV=$VITE_BACKEND_URL_DEV
+# # # Set environment variables for Vite build
+# # ENV VITE_ENV=$VITE_ENV
+# ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 
-# Copy package files
-COPY package.json yarn.lock ./
+# # # Copy package files
+# # COPY package.json yarn.lock ./
 
-# Install dependencies
-RUN yarn install --frozen-lockfile
+# # # Install dependencies
+# RUN yarn install --frozen-lockfile
 
-# Copy source code
-COPY . .
+# # # Copy source code
+# COPY . .
 
-# Build the application
-RUN yarn build
+# # # Build the application
+# RUN yarn build
 
-CMD yarn preview
+# CMD yarn preview
 
-# # Production stage
-# FROM --platform=linux/arm64 nginx:alpine
+# Production stage
+FROM nginx:alpine
 
-# # Copy built assets from build stage
-# COPY --from=build /app/build /usr/share/nginx/html
+# Copy built assets from build stage
+COPY ./build /usr/share/nginx/html
 
-# # Copy nginx configuration
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# # Expose port 80
-# EXPOSE 80
+# Expose port 80
+EXPOSE 80
 
-# # Start nginx
-# CMD ["nginx", "-g", "daemon off;"] 
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"] 

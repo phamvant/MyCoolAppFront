@@ -4,6 +4,7 @@ export interface BaseQuestion {
   id: number;
   idx: number;
   type: QuestionType;
+  topicName: string;
   question: string;
   isAnswered: boolean;
   readOnly: boolean;

@@ -1,21 +1,18 @@
 import React from "react";
 import { Clock } from "lucide-react";
+import { useExamTimer } from "../../../hooks/useExamTimer";
 
 interface TimerProps {
-  timeLeft: number;
+  instanceId: number;
 }
 
-const Timer: React.FC<TimerProps> = ({ timeLeft }) => {
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
+const Timer: React.FC<TimerProps> = ({ instanceId }) => {
+  const { formattedTime, isActive } = useExamTimer(instanceId);
 
   return (
-    <div className="flex items-center gap-2">
-      <Clock className="w-5 h-5 mr-2" />
-      <p className="w-10">{formatTime(timeLeft)}</p>
+    <div className={`flex items-center gap-2 ${!isActive ? "opacity-50" : ""}`}>
+      <Clock className="w-5 h-5 text-gray-600" />
+      <span className="font-medium text-gray-700">{formattedTime}</span>
     </div>
   );
 };

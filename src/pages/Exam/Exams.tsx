@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import ProgressBar from "../../components/common/ProgressBar";
 import configuration from "../../configuration/EnvConfig";
 import { validateInstance } from "./components/Validation";
 import { useAuth } from "../../hooks/UseAuth";
 import Dialog from "../../components/common/InstanceCreateDialog";
-import { getCsrfToken } from "../../services/examService";
+import { examService } from "../../services/examService";
 
 interface Exam extends ExamResponse {
   author: string;
@@ -196,15 +196,10 @@ const ExamCard: React.FC<{
   const createNewInstance = async (examId: string) => {
     setStatus("loading");
     try {
-      const csrfToken = getCsrfToken();
       const response = await fetch(
         `${configuration.BACKEND_URL}/exam-instances/create/${examId}`,
         {
           method: "POST",
-          headers: {
-            "X-XSRF-TOKEN": csrfToken ?? "", // Spring expects this header
-            "Content-Type": "application/json",
-          },
           credentials: "include",
         }
       );
@@ -263,12 +258,36 @@ const ExamCard: React.FC<{
 const ExamInstanceCard: React.FC<{ instance: ExamInstance }> = ({
   instance,
 }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this exam instance?")) {
+      setIsDeleting(true);
+      try {
+        await examService.deleteInstance(instance.id);
+        window.location.reload(); // Refresh the page to update the list
+      } catch (error) {
+        console.error("Failed to delete exam instance:", error);
+        alert("Failed to delete exam instance. Please try again.");
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
+
   return (
     <div className="w-full md:w-auto bg-white p-6 rounded-2xl shadow-md flex flex-col items-center size-fit min-w-[16rem] gap-6 hover:scale-105 transition-all duration-300">
       <div className="w-full flex items-center justify-between gap-10">
         {instance.progress !== undefined && (
           <ProgressBar progress={instance.progress} />
         )}
+        <button
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="flex items-center gap-2 px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
       </div>
       <div className="flex-1 flex items-center justify-center">
         <img
@@ -281,7 +300,7 @@ const ExamInstanceCard: React.FC<{ instance: ExamInstance }> = ({
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">{instance.exam.name}</h3>
         </div>
-        <a href={`/MyCoolAppFront/exams/${instance.id}`} target="_blank">
+        <a href={`/exams/${instance.id}`} target="_blank">
           <div className="bg-primary text-white px-4 py-2 rounded-full">
             Take Test
           </div>

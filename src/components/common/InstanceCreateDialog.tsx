@@ -40,7 +40,7 @@ const Dialog: React.FC<DialogProps> = ({
             </div>
           ) : status === "success" && instanceId ? (
             <a
-              href={`/MyCoolAppFront/exams/${instanceId}`}
+              href={`exams/${instanceId}`}
               className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors"
               target="_blank"
               onClick={onClose}
