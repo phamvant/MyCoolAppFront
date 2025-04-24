@@ -1,37 +1,40 @@
 import React from "react";
 import { Check, Loader2, Save, X } from "lucide-react";
 
-interface SaveButtonProps {
-  saveStatus: "idle" | "saving" | "saved" | "error";
-  onSave: () => void;
+interface FinishButtonProps {
+  finishStatus: "idle" | "saving" | "saved" | "error";
+  onFinish: () => void;
 }
 
-const SaveButton: React.FC<SaveButtonProps> = ({ saveStatus, onSave }) => {
+const FinishButton: React.FC<FinishButtonProps> = ({
+  finishStatus,
+  onFinish,
+}) => {
   return (
     <button
-      onClick={onSave}
-      disabled={saveStatus === "saving"}
+      onClick={onFinish}
+      disabled={finishStatus === "saving"}
       className={`text-white px-4 py-2 rounded-full flex items-center ml-4 ${
-        saveStatus === "saving"
+        finishStatus === "saving"
           ? "bg-gray-400"
-          : saveStatus === "saved"
+          : finishStatus === "saved"
           ? "bg-green-500 hover:bg-green-600"
-          : saveStatus === "error"
+          : finishStatus === "error"
           ? "bg-red-500 hover:bg-red-600"
           : "bg-primary hover:bg-primary/80"
       }`}
     >
-      {saveStatus === "saving" ? (
+      {finishStatus === "saving" ? (
         <>
           <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-          Saving...
+          Finishing...
         </>
-      ) : saveStatus === "saved" ? (
+      ) : finishStatus === "saved" ? (
         <>
           <Check className="w-5 h-5 mr-2" />
-          Saved
+          Finished
         </>
-      ) : saveStatus === "error" ? (
+      ) : finishStatus === "error" ? (
         <>
           <X className="w-5 h-5 mr-2" />
           Error
@@ -39,11 +42,11 @@ const SaveButton: React.FC<SaveButtonProps> = ({ saveStatus, onSave }) => {
       ) : (
         <>
           <Save className="w-5 h-5 mr-2" />
-          Save
+          Finish
         </>
       )}
     </button>
   );
 };
 
-export default SaveButton;
+export default FinishButton;

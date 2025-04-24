@@ -133,4 +133,23 @@ export const examService = {
       }
     });
   },
+
+  finishExam: async (instanceId: number): Promise<void> => {
+    const response = await fetch(
+      `${configuration.BACKEND_URL}/exam-instances/${instanceId}/finish`,
+      {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to finish exam");
+    }
+
+    return response.json();
+  },
 };

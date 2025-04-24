@@ -5,9 +5,9 @@ import { AnswerSubmission, examService } from "../../services/examService";
 import QuestionRenderer from "./components/QuestionRenderer";
 import ExamTopbar from "./components/ExamTopbar";
 import ExamNavigateButton from "./components/ExamNavigationButton";
-import SaveButton from "./components/SaveButton";
 import Timer from "./components/Timer";
 import { ResponseInstance } from "../../types/examResponse";
+import FinishButton from "./components/SaveButton";
 
 const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [instance, setInstance] = useState<ResponseInstance | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [saveStatus, setSaveStatus] = useState<
+  const [finishStatus, setFinishStatus] = useState<
     "idle" | "saving" | "saved" | "error"
   >("idle");
 
@@ -77,27 +77,19 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
     navigate("/error");
   }
 
-  const handleSave = async () => {
-    setSaveStatus("saving");
-    const savePromise = new Promise((resolve, reject) =>
-      setTimeout(() => {
-        if (Math.random() > 0.5) {
-          resolve(true);
-        } else {
-          reject();
-        }
-      }, 2000)
-    );
+  const handleFinish = async () => {
+    setFinishStatus("saving");
+    const finishPromise = examService.finishExam(instanceId);
 
-    savePromise
+    finishPromise
       .then(() => {
-        setSaveStatus("saved");
+        setFinishStatus("saved");
         setTimeout(() => {
-          setSaveStatus("idle");
+          setFinishStatus("idle");
         }, 2000);
       })
       .catch(() => {
-        setSaveStatus("error");
+        setFinishStatus("error");
       });
   };
 
@@ -156,7 +148,12 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
           )}
           <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end">
             <Timer instanceId={instanceId} />
-            <SaveButton saveStatus={saveStatus} onSave={handleSave} />
+            <div className="flex items-center gap-2">
+              <FinishButton
+                finishStatus={finishStatus}
+                onFinish={handleFinish}
+              />
+            </div>
           </div>
         </div>
 

@@ -1,9 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const Layout: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [lastLocation, setLastLocation] = useState(location);
+
+  useEffect(() => {
+    console.log(location, lastLocation);
+    if (
+      location.pathname !== lastLocation.pathname &&
+      lastLocation.pathname.includes("exams/")
+    ) {
+      const confirmLeave = window.confirm(
+        "You have unsaved changes. Are you sure you want to leave?"
+      );
+      if (!confirmLeave) {
+        navigate(lastLocation.pathname, { replace: true });
+      } else {
+        setLastLocation(location);
+      }
+    } else {
+      setLastLocation(location);
+    }
+  }, [location, lastLocation, navigate]);
+
   return (
     <div>
       <Topbar />
