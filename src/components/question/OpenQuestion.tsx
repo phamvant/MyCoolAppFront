@@ -5,12 +5,14 @@ interface OpenQuestionProps {
   question: TOpenQuestion;
   answer: string;
   onAnswerChange: (answer: string) => void;
+  readOnly: boolean;
 }
 
 export const OpenQuestion: React.FC<OpenQuestionProps> = ({
   question,
   answer,
   onAnswerChange,
+  readOnly,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -28,7 +30,11 @@ export const OpenQuestion: React.FC<OpenQuestionProps> = ({
         ref={textareaRef}
         className="w-full p-4 border border-gray-200 rounded-lg resize-none min-h-[8rem] max-h-[24rem] overflow-y-auto"
         value={answer}
-        onChange={(e) => onAnswerChange(e.target.value)}
+        onChange={(e) => {
+          if (!readOnly) {
+            onAnswerChange(e.target.value);
+          }
+        }}
         placeholder="Type your answer here..."
       />
     </div>

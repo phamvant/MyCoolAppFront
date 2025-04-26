@@ -43,3 +43,5 @@ export interface NextQuestionsResponse {
 export interface ExamResumeResponse extends NextQuestionsResponse {
   userResponseDTOS: UserResponse[];
 }
+
+export interface ExamResult extends ExamResumeResponse {}

@@ -4,12 +4,14 @@ interface SingleChoiceProps {
   question: TSChoiceQuestion;
   selectedOption: number | null;
   onSelect: (option: number) => void;
+  readOnly: boolean;
 }
 
 export const SingleChoiceQuestion: React.FC<SingleChoiceProps> = ({
   question,
   selectedOption,
   onSelect,
+  readOnly,
 }) => {
   return (
     <div className="flex flex-col gap-4">
@@ -23,7 +25,7 @@ export const SingleChoiceQuestion: React.FC<SingleChoiceProps> = ({
                 : "border-gray-200 hover:bg-primary/5"
             } transition-all`}
             onClick={() => {
-              if (!question.readOnly) {
+              if (!readOnly) {
                 onSelect(option.id);
               }
             }}

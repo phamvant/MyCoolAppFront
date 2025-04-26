@@ -79,18 +79,14 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
 
   const handleFinish = async () => {
     setFinishStatus("saving");
-    const finishPromise = examService.finishExam(instanceId);
-
-    finishPromise
-      .then(() => {
-        setFinishStatus("saved");
-        setTimeout(() => {
-          setFinishStatus("idle");
-        }, 2000);
-      })
-      .catch(() => {
-        setFinishStatus("error");
-      });
+    try {
+      await examService.finishExam(instanceId);
+      setFinishStatus("saved");
+      navigate(`/exams/${instanceId}/result`);
+    } catch (error) {
+      console.error("Error finishing exam:", error);
+      setFinishStatus("error");
+    }
   };
 
   const handleSubmit = async () => {

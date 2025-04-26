@@ -6,6 +6,7 @@ export interface BaseQuestion {
   type: QuestionType;
   topicName: string;
   question: string;
+  explain: string;
   isAnswered: boolean;
   readOnly: boolean;
 }
@@ -13,6 +14,7 @@ export interface BaseQuestion {
 export interface QuestionOption {
   id: number;
   content: string;
+  correct: boolean;
 }
 
 export interface TMChoiceQuestion extends BaseQuestion {

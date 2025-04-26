@@ -9,7 +9,6 @@ const Layout: React.FC = () => {
   const [lastLocation, setLastLocation] = useState(location);
 
   useEffect(() => {
-    console.log(location, lastLocation);
     if (
       location.pathname !== lastLocation.pathname &&
       lastLocation.pathname.includes("exams/")

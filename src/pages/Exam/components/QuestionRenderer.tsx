@@ -63,6 +63,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({
           question={question}
           selectedOptions={question.userAnswer}
           onSelect={handleMultipleSelect}
+          readOnly={false}
         />
       );
     case "single":
@@ -71,6 +72,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({
           question={question}
           selectedOption={question.userAnswer[0]}
           onSelect={handleSingleSelect}
+          readOnly={false}
         />
       );
     case "open":
@@ -79,6 +81,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({
           question={question}
           answer={question.userAnswer as string}
           onAnswerChange={handleOpenAnswerChange}
+          readOnly={false}
         />
       );
     default:

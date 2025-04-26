@@ -2,6 +2,7 @@ import configuration from "../configuration/EnvConfig";
 import {
   NextQuestionsResponse,
   ExamResumeResponse,
+  ExamResult,
 } from "../types/examResponse";
 import {
   Question,
@@ -93,8 +94,6 @@ export const examService = {
         isAnswered: false,
       };
 
-      console.log(baseQuestion);
-
       switch (q.type) {
         case "multiple_choice": {
           const userAnswer = response
@@ -107,7 +106,12 @@ export const examService = {
             userAnswer: userAnswer,
             isAnswered: userAnswer.length > 0,
             readOnly: userAnswer.length > 0,
-            options: q.answers.map((a) => ({ id: a.id, content: a.content })),
+            options: q.answers.map((a) => ({
+              id: a.id,
+              content: a.content,
+              correct: a.correct,
+            })),
+            explain: q.explain,
           } as TMChoiceQuestion;
         }
         case "single": {
@@ -119,7 +123,11 @@ export const examService = {
             type: "single" as const,
             isAnswered: userAnswer.length > 0,
             readOnly: userAnswer.length > 0,
-            options: q.answers.map((a) => ({ id: a.id, content: a.content })),
+            options: q.answers.map((a) => ({
+              id: a.id,
+              content: a.content,
+              correct: a.correct,
+            })),
           } as TSChoiceQuestion;
         }
         case "open":
@@ -148,6 +156,20 @@ export const examService = {
 
     if (!response.ok) {
       throw new Error("Failed to finish exam");
+    }
+  },
+
+  getExamResult: async (instanceId: number): Promise<ExamResult> => {
+    const response = await fetch(
+      `${configuration.BACKEND_URL}/exam-instances/${instanceId}/result`,
+      {
+        credentials: "include",
+        method: "GET",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to get exam result");
     }
 
     return response.json();

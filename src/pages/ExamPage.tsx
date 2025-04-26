@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import Exam from "./Exam/Exam";
 
-export const ExamPage: React.FC = () => {
+const ExamPage: React.FC = () => {
   const { instanceId } = useParams<{ instanceId: string }>();
 
   if (!instanceId) {
@@ -11,3 +11,5 @@ export const ExamPage: React.FC = () => {
 
   return <Exam instanceId={parseInt(instanceId, 10)} />;
 };
+
+export default ExamPage;

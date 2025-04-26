@@ -30,6 +30,7 @@ export interface ExamInstanceResponse {
   progress?: number;
   startDate: string;
   favourite: boolean;
+  status: "ACTIVE" | "COMPLETED" | "EXPIRED" | "IN_PROGRESS";
 }
 
 const img =
@@ -109,14 +110,16 @@ const Exams: React.FC = () => {
 
         setExams(mappedExams);
 
-        const test: ExamInstance[] = validatedInstances.map((instance) => {
-          return {
-            ...instance,
-            exam: mappedExams.find((exam) => exam.id === instance.examId)!,
-          };
-        });
+        const examInstances: ExamInstance[] = validatedInstances.map(
+          (instance) => {
+            return {
+              ...instance,
+              exam: mappedExams.find((exam) => exam.id === instance.examId)!,
+            };
+          }
+        );
 
-        setExamInstances(test);
+        setExamInstances(examInstances);
 
         setIsLoading(false);
       } catch (error) {
@@ -130,12 +133,6 @@ const Exams: React.FC = () => {
       fetchExams();
     }
   }, [authentication, loading]);
-
-  // useEffect(() => {
-  //   console.log(examInstances);
-  // }, [examInstances]);
-
-  // return <></>;
 
   return (
     <div className="p-6 overflow-auto">
@@ -300,11 +297,19 @@ const ExamInstanceCard: React.FC<{ instance: ExamInstance }> = ({
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">{instance.exam.name}</h3>
         </div>
-        <a href={`/exams/${instance.id}`} target="_blank">
-          <div className="bg-primary text-white px-4 py-2 rounded-full">
-            Take Test
-          </div>
-        </a>
+        {instance.status === "COMPLETED" ? (
+          <a href={`/exams/${instance.id}/result`} target="_blank">
+            <div className="bg-green-500 text-white px-4 py-2 rounded-full">
+              View Result
+            </div>
+          </a>
+        ) : (
+          <a href={`/exams/${instance.id}`} target="_blank">
+            <div className="bg-primary text-white px-4 py-2 rounded-full">
+              Take Test
+            </div>
+          </a>
+        )}
       </div>
     </div>
   );

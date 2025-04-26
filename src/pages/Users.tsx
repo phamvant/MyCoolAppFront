@@ -99,7 +99,6 @@ const Users: React.FC = () => {
   const handleDeleteConfirm = () => {
     if (deleteDialog.user) {
       // Implement delete logic here
-      console.log("Deleting user:", deleteDialog.user.id);
     }
     setDeleteDialog({ isOpen: false, user: null });
   };
