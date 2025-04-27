@@ -23,6 +23,7 @@ export interface ResponseInstance {
   name: string;
   progress: number;
   startDate: string;
+  status: string;
   currentDifficultLevel: string;
   currentQuestionIdx: number;
   correctAnswerNumber: number;

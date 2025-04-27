@@ -28,7 +28,7 @@ export interface EditQuestionDTO {
 }
 
 export interface EditAnswerDTO {
-  id: number;
+  id: number | null;
   content: string;
   correct: boolean;
 }
@@ -88,6 +88,14 @@ export const examService = {
         body: JSON.stringify(answers),
       }
     );
+
+    if (response.status === 400) {
+      const error = await response.json();
+      if (error.code === "BUS002") {
+        throw new Error("BUS002");
+      }
+      throw new Error("Failed to process next question");
+    }
 
     if (!response.ok) {
       throw new Error("Failed to process next question");

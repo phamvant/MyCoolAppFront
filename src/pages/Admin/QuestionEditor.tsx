@@ -19,7 +19,7 @@ interface Question {
   type: string;
   link: string;
   answers: {
-    id: number;
+    id: number | null;
     content: string;
     correct: boolean;
   }[];
@@ -51,7 +51,6 @@ const QuestionEditor: React.FC = () => {
       );
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setFormData(data);
       } else {
         setError("Question not found");
@@ -89,6 +88,33 @@ const QuestionEditor: React.FC = () => {
         ...updatedAnswers[index],
         [field]: value,
       };
+      setFormData({
+        ...formData,
+        answers: updatedAnswers,
+      });
+    }
+  };
+
+  const handleAddAnswer = () => {
+    if (formData) {
+      setFormData({
+        ...formData,
+        answers: [
+          ...formData.answers,
+          {
+            id: null,
+            content: "",
+            correct: false,
+          },
+        ],
+      });
+    }
+  };
+
+  const handleRemoveAnswer = (index: number) => {
+    if (formData) {
+      const updatedAnswers = [...formData.answers];
+      updatedAnswers.splice(index, 1);
       setFormData({
         ...formData,
         answers: updatedAnswers,
@@ -217,12 +243,23 @@ const QuestionEditor: React.FC = () => {
 
                 {/* Options Section */}
                 <div className="space-y-4">
-                  <label className="block text-sm font-medium text-gray-700">
-                    🎨 Answers
-                  </label>
+                  <div className="flex justify-between items-center">
+                    <label className="block text-sm font-medium text-gray-700">
+                      🎨 Answers
+                    </label>
+                    <GradientButton
+                      onClick={handleAddAnswer}
+                      gradientFrom="from-green-500"
+                      gradientTo="to-emerald-500"
+                      hoverFrom="from-green-600"
+                      hoverTo="to-emerald-600"
+                    >
+                      + Add Answer
+                    </GradientButton>
+                  </div>
                   {formData.answers.map((option, index) => (
                     <div
-                      key={option.id}
+                      key={option.id || `new-${index}`}
                       className="flex items-center gap-4 group"
                     >
                       <input
@@ -241,6 +278,12 @@ const QuestionEditor: React.FC = () => {
                           handleAnswerChange(index, "content", e.target.value)
                         }
                       />
+                      <button
+                        onClick={() => handleRemoveAnswer(index)}
+                        className="p-2 text-red-500 hover:text-red-600 transition-colors duration-300"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
                     </div>
                   ))}
                 </div>

@@ -44,7 +44,12 @@ const QuestionDetailsModal: React.FC<QuestionDetailsModalProps> = ({
           }`}
       >
         <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Question {question.idx + 1}</h2>
+          <div className="flex flex-col">
+            <h2 className="text-xl font-semibold">
+              Question {question.idx + 1}
+            </h2>
+            <p className="text-sm text-gray-500">Id: {question.id}</p>
+          </div>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"

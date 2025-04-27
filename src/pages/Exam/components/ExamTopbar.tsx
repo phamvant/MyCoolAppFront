@@ -34,15 +34,28 @@ const ExamTopbar: React.FC<ExamTopbarProps> = ({
         </button> */}
       </div>
       <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-gray-600">
-        <div className="whitespace-nowrap">
-          Correct: {instance.correctAnswerNumber} /{" "}
-          {instance.correctAnswerNumber + instance.incorrectAnswerNumber}
-        </div>
-        <div className="whitespace-nowrap">
-          Difficulty: {instance.currentDifficultLevel}
-        </div>
-        <div className="whitespace-nowrap">
-          Topic: {questions[currentIndex].topicName}
+        <div>
+          <div className="flex gap-4">
+            <div className="whitespace-nowrap">
+              <span className="font-bold">Correct : </span>{" "}
+              {instance.correctAnswerNumber} //{" "}
+              {instance.correctAnswerNumber + instance.incorrectAnswerNumber}
+            </div>
+            <div className="whitespace-nowrap">
+              <span className="font-bold">QuestionId:</span>{" "}
+              {questions[currentIndex].id}
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="whitespace-nowrap">
+              <span className="font-bold">Difficulty:</span>{" "}
+              {instance.currentDifficultLevel}
+            </div>
+            <div className="whitespace-nowrap">
+              <span className="font-bold">Topic:</span>{" "}
+              {questions[currentIndex].topicName}
+            </div>
+          </div>
         </div>
       </div>
     </div>

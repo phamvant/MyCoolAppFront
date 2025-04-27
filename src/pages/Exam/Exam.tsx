@@ -46,6 +46,8 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
             .map((q) => q.idx)
             .pop() ?? 0;
 
+        console.log(lastAnsweredIndex);
+
         setCurrentIndex(
           lastAnsweredIndex === 0 ? lastAnsweredIndex : lastAnsweredIndex + 1
         );
@@ -108,10 +110,38 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
         };
       });
 
-      const response = await examService.processNextQuestion(
-        instanceId,
-        userAnswers
-      );
+      let retryCount = 0;
+      let response;
+      let success = false;
+
+      while (retryCount < 4 && !success) {
+        try {
+          response = await examService.processNextQuestion(
+            instanceId,
+            userAnswers
+          );
+          success = true;
+        } catch (error) {
+          if (error instanceof Error && error.message !== "BUS002") {
+            navigate("/error");
+          }
+          retryCount++;
+          if (retryCount === 4) {
+            throw error;
+          }
+          // Wait for 1 second before retrying
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+
+      if (!response) {
+        throw new Error("Failed to process next question");
+      }
+
+      if (response.instanceDTO.status === "COMPLETED") {
+        navigate(`/exams/${instanceId}/result`);
+      }
+
       const convertedQuestions: Question[] = examService.parseResponseQuestion(
         {
           ...response,
@@ -127,7 +157,7 @@ const Exam: React.FC<{ instanceId: number }> = ({ instanceId }) => {
       setExamState("idle");
     } catch (error) {
       console.error(error);
-      setExamState("error");
+      navigate("/error");
     }
   };
 
