@@ -12,10 +12,25 @@ import {
 } from "../types/exam";
 import { ResponseQuestion } from "../types/examResponse";
 import Cookies from "js-cookie";
+import { ExamInstanceResponse } from "../pages/Exam/Exams";
 
 export interface AnswerSubmission {
   answerId: number[] | string;
   questionId: number;
+}
+
+export interface EditQuestionDTO {
+  id: number;
+  content: string;
+  explain: string;
+  link: string;
+  answers: EditAnswerDTO[];
+}
+
+export interface EditAnswerDTO {
+  id: number;
+  content: string;
+  correct: boolean;
 }
 
 export const getCsrfToken: () => string | undefined = () =>
@@ -173,5 +188,57 @@ export const examService = {
     }
 
     return response.json();
+  },
+
+  createExam: async (): Promise<number> => {
+    const response = await fetch(`${configuration.BACKEND_URL}/exams/create`, {
+      credentials: "include",
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create exam");
+    }
+
+    return response.json();
+  },
+
+  createNewInstance: async (examId: number): Promise<ExamInstanceResponse> => {
+    try {
+      const response = await fetch(
+        `${configuration.BACKEND_URL}/exam-instances/create/${examId}`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+      const data = (await response.json()) as ExamInstanceResponse;
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching URL:", error);
+      throw error;
+    }
+  },
+
+  updateQuestion: async (
+    questionId: number,
+    questionData: EditQuestionDTO
+  ): Promise<void> => {
+    const response = await fetch(
+      `${configuration.BACKEND_URL}/questions/${questionId}`,
+      {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(questionData),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to update question");
+    }
   },
 };

@@ -14,7 +14,7 @@ import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
 import ExamRoutes from "./ExamRoutes";
 import { Landing } from "../pages/Landing";
-
+import AdminRoutes from "./AdminRoute";
 const AppRoutes: React.FC = () => {
   // const basename = "/MyCoolAppFront";
 
@@ -36,6 +36,7 @@ const AppRoutes: React.FC = () => {
             {UserRoutes}
             {RequestRoutes}
             {ExamRoutes}
+            {AdminRoutes}
             <Route path="/" element={<Landing />} />
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<Navigate to="/404" replace />} />

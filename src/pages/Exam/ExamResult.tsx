@@ -311,43 +311,6 @@ const ExamResult: React.FC = () => {
                   </div>
                 );
               })}
-              {questions.map((question, index) => {
-                const correct =
-                  question.type === "multiple_choice" ||
-                  question.type === "single"
-                    ? question.options.every(
-                        (opt) =>
-                          opt.correct === question.userAnswer.includes(opt.id)
-                      )
-                    : false;
-
-                return (
-                  <div
-                    key={question.id}
-                    className={`p-3 rounded-lg cursor-pointer transition-all ${
-                      correct
-                        ? "bg-green-50 hover:bg-green-100"
-                        : "bg-red-50 hover:bg-red-100"
-                    }`}
-                    onClick={() => setSelectedQuestion(question)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                          correct ? "bg-green-200" : "bg-red-200"
-                        }`}
-                      >
-                        <span className="text-xs size-6 flex items-center justify-center">
-                          {index + 1}
-                        </span>
-                      </div>
-                      <p className="text-sm line-clamp-2">
-                        {question.question}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
             </div>
           </div>
 

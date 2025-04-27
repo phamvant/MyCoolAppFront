@@ -1,8 +1,16 @@
-import { Settings, BookOpen, Home } from "lucide-react";
+import { Settings, BookOpen, Home, Pencil } from "lucide-react";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../../hooks/UseAuth";
 
 const Sidebar: React.FC = () => {
+  const { authentication } = useAuth();
+  let isAdmin = false;
+
+  if (authentication) {
+    isAdmin = authentication.role === "ADMIN";
+  }
+
   const NavItem: React.FC<{
     to: string;
     label: string;
@@ -18,7 +26,7 @@ const Sidebar: React.FC = () => {
       <Link
         to={to}
         className={`
-          flex items-center p-4 rounded-3xl
+          flex items-center p-4 rounded-full
           transition-all duration-300
           text-primary
           text-xl
@@ -42,6 +50,11 @@ const Sidebar: React.FC = () => {
         <NavItem to="/exams" label="Exams">
           <BookOpen className="w-6 h-5" />
         </NavItem>
+        {isAdmin && (
+          <NavItem to="/admin/question-editor" label="Question Editor">
+            <Pencil className="w-6 h-5" />
+          </NavItem>
+        )}
         <NavItem to="/settings" label="Settings">
           <Settings className="w-6 h-5" />
         </NavItem>
